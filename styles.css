@@ -1,0 +1,52 @@
+h1 {
+    color: white;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-shadow: 2px 2px darkslategray;
+    font-size: 70px;
+    letter-spacing: 5px;
+}
+
+h4 {
+    color:white;
+}
+
+h3 {
+    visibility: hidden;
+}
+
+body {
+    background-color: black;
+}
+
+.game {
+    visibility: hidden;
+    text-align: center;
+}
+
+img {
+    height: 300px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+header {
+    text-align: center;
+}
+
+/* button */
+.next {
+    display: relative;
+    top: 400px;
+}
+
+.playAgain {
+    display: none;
+}
+
+footer {
+    text-align: center;
+    padding-top: 10px;
+}
+
+

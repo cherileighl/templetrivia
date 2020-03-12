@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="temples.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="styles.css">
+        <title>Temple Trivia</title>
+    </head>
+
+    <body>
+        <header>
+            <h1 id="myHead">TEMPLE TRIVIA</h1>    
+            <button id="startGame" type="button" class="btn-danger btn" onclick="generateList()">Play Now!</button>
+            <button id="playAgain" type="button" class="btn-danger btn playAgain" onclick="generateList()">Play Again!</button>
+        </header>
+        
+        <div id='gameDiv' class="game">
+            <div>
+                <h3 id="correct" style="color: green;">Correct!</h3>
+                <h3 id="incorrect" style="color: red;">Incorrect</h3>
+
+                    <h4 id="matchLocation">WHICH TEMPLE AM I?</h4>
+                    <img src='' alt="Card image" id="matchImg" />
+            </div>
+            
+            <button type="button" class="btn btn-info" style="position: relative; bottom: 175px; left: 275px;" onclick='startGame()'><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+
+            <div onclick='submitGuess(event)'>
+                <button type="button" class="btn btn-dark btn-block" id="guess0"></button>
+                <button type="button" class="btn btn-dark btn-block" id="guess1"></button>
+                <button type="button" class="btn btn-dark btn-block" id="guess2"></button>
+            </div>
+
+        </div>
+        <footer>
+            <p>Temple Trivia &copy; 2020</p>
+        </footer>
+
+        <!--JAVASCRIPT-->
+        <script>
+            // CLASSES
+            class Temple {
+                title;
+                filename;
+                status;
+                correctGuesses = 0;
+
+                constructor(title, filename, status) {
+                    this.title = title;
+                    this.filename = filename;
+                    this.status = status;
+                }
+            }
+
+            // VARIABLES
+            var oTempleGuess1;
+            var oTempleGuess2;
+            var match;
+            var aNums = [];
+            var round = []; //temples in one round
+
+            function allTemples() {
+                for (var iCount = 0; iCount < templeArray.length; iCount++) {
+                    var oTemple = new Temple(templeArray[iCount][0], templeArray[iCount][1], templeArray[iCount][2]);  
+                    document.getElementById("templeTitle").innerHTML = oTemple.title;
+                    document.getElementById("templePic").src = "/media/" + oTemple.filename + ".jpeg";
+                    document.getElementById("templeStatus").innerHTML = oTemple.status;
+                }
+            }
+
+            // Create a list of 10 temples that will be put in the round
+            function generateList() {
+                document.getElementById('gameDiv').style.visibility = 'visible';
+                document.getElementById('startGame').style.visibility = 'hidden';
+                document.getElementById('playAgain').style.display = "none";
+
+                for (var iCount = 0; iCount < 10; iCount++) {
+                    var num = 0;
+                    num = Math.floor(Math.random() * templeArray.length);
+                    while (aNums.includes(num) == true) {
+                        num = Math.floor(Math.random() * templeArray.length);
+                    }
+                    aNums.push(num);
+
+                    var oTemple = new Temple(templeArray[num][0], templeArray[num][1], templeArray[num][2]);
+                    round.push(oTemple);
+                }
+                console.log(round)
+                startGame();
+            }
+
+            function startGame() {                
+                document.getElementById('correct').style.visibility = 'hidden';
+                document.getElementById('incorrect').style.visibility = 'hidden';
+                match = round[0];
+                
+                oTempleGuess1 = templeArray[Math.floor(Math.random() * templeArray.length)];
+                oTempleGuess1 = new Temple(oTempleGuess1[0], oTempleGuess1[1], oTempleGuess1[2]);
+                if (oTempleGuess1.title == match.title ) {
+                    while (oTempleGuess1.title == match.title) {
+                        oTempleGuess1 = templeArray[Math.floor(Math.random() * templeArray.length)];
+                        oTempleGuess1 = new Temple(oTempleGuess1[0], oTempleGuess1[1], oTempleGuess1[2]);
+                    }
+                }
+
+                oTempleGuess2 = templeArray[Math.floor(Math.random() * templeArray.length)];
+                oTempleGuess2 = new Temple(oTempleGuess2[0], oTempleGuess2[1], oTempleGuess2[2]);
+                if (oTempleGuess2.title == oTempleGuess1.title || oTempleGuess2.title == match.title) {
+                    while (oTempleGuess2.title == oTempleGuess1.title || oTempleGuess2.title == match.title) {
+                        oTempleGuess2 = templeArray[Math.floor(Math.random() * templeArray.length)];
+                        oTempleGuess2 = new Temple(oTempleGuess2[0], oTempleGuess2[1], oTempleGuess2[2]);
+                    }
+                }
+                playGame(match, oTempleGuess1, oTempleGuess2);
+                  
+            }
+
+
+            function playGame(match, oTempleGuess1, oTempleGuess2) {
+                //put image in for the actual match
+                document.getElementById('matchImg').src = "/media/" + match.filename + ".jpeg";
+
+                //assign values to guess buttons
+                randNum1 = Math.floor(Math.random() * 3);
+                randNum2 = Math.floor(Math.random() * 3);
+                if (randNum2 == randNum1) {
+                    while (randNum2 == randNum1) {
+                        randNum2 = Math.floor(Math.random() * 3);
+                    }
+                }
+
+                randNum3 = Math.floor(Math.random() * 3);
+                if (randNum3 == randNum2 || randNum3 == randNum1) {
+                    while (randNum3 == randNum2 || randNum3 == randNum1) {
+                        randNum3 = Math.floor(Math.random() * 3);
+                    }
+                }
+                
+                document.getElementById('guess' + randNum1).innerHTML = match.title;
+                document.getElementById('guess' + randNum2).innerHTML = oTempleGuess1.title;
+                document.getElementById('guess' + randNum3).innerHTML = oTempleGuess2.title;
+            }
+
+            function submitGuess(event) {
+                var guess = event.target.innerHTML;
+                console.log(event.target.innerHTML);
+                if (guess == match.title) {
+                    document.getElementById('correct').style.visibility = 'visible';
+                    match.correctGuesses++;
+                    round.shift(); //remove first element of array
+                }
+                else {
+                    document.getElementById('incorrect').style.visibility = 'visible';
+                    round.push(round.shift()); //move first temple object to end of the array
+                }
+
+                if (round.length == 0) {
+                    document.getElementById('gameDiv').style.visibility = 'hidden';
+                    document.getElementById('playAgain').style.display = "block";
+                    document.getElementById('correct').style.visibility = 'hidden';
+                    document.getElementById('incorrect').style.visibility = 'hidden';
+                }
+            }
+        </script>
+    </body>
+</html>
+
+<!--
+    Things you could add later:
+    - Create player and allow player to have multiple rounds
+    - Store missed temples in an array so player can review those
+    - Add more info for temples and sort them by category (e.g. temples in North America)
+-->
