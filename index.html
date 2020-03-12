@@ -39,12 +39,10 @@
 
         <!--JAVASCRIPT-->
         <script>
-            // CLASSES
             class Temple {
                 title;
                 filename;
                 status;
-                correctGuesses = 0;
 
                 constructor(title, filename, status) {
                     this.title = title;
@@ -59,15 +57,6 @@
             var match;
             var aNums = [];
             var round = []; //temples in one round
-
-            function allTemples() {
-                for (var iCount = 0; iCount < templeArray.length; iCount++) {
-                    var oTemple = new Temple(templeArray[iCount][0], templeArray[iCount][1], templeArray[iCount][2]);  
-                    document.getElementById("templeTitle").innerHTML = oTemple.title;
-                    document.getElementById("templePic").src = "/media/" + oTemple.filename + ".jpeg";
-                    document.getElementById("templeStatus").innerHTML = oTemple.status;
-                }
-            }
 
             // Create a list of 10 temples that will be put in the round
             function generateList() {
@@ -86,15 +75,17 @@
                     var oTemple = new Temple(templeArray[num][0], templeArray[num][1], templeArray[num][2]);
                     round.push(oTemple);
                 }
-                console.log(round)
                 startGame();
             }
 
             function startGame() {                
                 document.getElementById('correct').style.visibility = 'hidden';
                 document.getElementById('incorrect').style.visibility = 'hidden';
+
+                // Assign match the first value of 'round' array
                 match = round[0];
                 
+                // Randomly select two other temples as guess options
                 oTempleGuess1 = templeArray[Math.floor(Math.random() * templeArray.length)];
                 oTempleGuess1 = new Temple(oTempleGuess1[0], oTempleGuess1[1], oTempleGuess1[2]);
                 if (oTempleGuess1.title == match.title ) {
@@ -112,16 +103,15 @@
                         oTempleGuess2 = new Temple(oTempleGuess2[0], oTempleGuess2[1], oTempleGuess2[2]);
                     }
                 }
-                playGame(match, oTempleGuess1, oTempleGuess2);
-                  
+                showGuesses(match, oTempleGuess1, oTempleGuess2);      
             }
 
 
-            function playGame(match, oTempleGuess1, oTempleGuess2) {
-                //put image in for the actual match
+            function showGuesses(match, oTempleGuess1, oTempleGuess2) {
+                // Show temple image
                 document.getElementById('matchImg').src = "/media/" + match.filename + ".jpeg";
 
-                //assign values to guess buttons
+                // Assign guesses to buttons
                 randNum1 = Math.floor(Math.random() * 3);
                 randNum2 = Math.floor(Math.random() * 3);
                 if (randNum2 == randNum1) {
@@ -148,11 +138,11 @@
                 if (guess == match.title) {
                     document.getElementById('correct').style.visibility = 'visible';
                     match.correctGuesses++;
-                    round.shift(); //remove first element of array
+                    round.shift(); // Remove first element of array
                 }
                 else {
                     document.getElementById('incorrect').style.visibility = 'visible';
-                    round.push(round.shift()); //move first temple object to end of the array
+                    round.push(round.shift()); // Move first temple object to end of the array
                 }
 
                 if (round.length == 0) {
@@ -169,6 +159,7 @@
 <!--
     Things you could add later:
     - Create player and allow player to have multiple rounds
+    - Once a player gets a temple correct three times, consider it 'mastered' and make a 'MasteredTemples' array
     - Store missed temples in an array so player can review those
-    - Add more info for temples and sort them by category (e.g. temples in North America)
+    - Add more info for temples and sort them by category (e.g. by region, dedication date, etc.)
 -->
